@@ -64,6 +64,7 @@ class _DesktopFooterState extends State<DesktopFooter> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 5),
                   Container(
                     width: 300,
                     child: Text(
