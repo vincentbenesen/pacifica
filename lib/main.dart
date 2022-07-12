@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'HomepageElements/homepage.dart';
+import 'ContactElements/contact.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const Homepage(),
+      home: const Contact(),
     );
   }
 }

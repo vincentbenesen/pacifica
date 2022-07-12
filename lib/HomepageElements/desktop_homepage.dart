@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:bulleted_list/bulleted_list.dart';
 
 import '../NavbarElements/navbar.dart';
+import '../FooterElements/footer.dart';
 
 class DesktopHomepage extends StatefulWidget {
   const DesktopHomepage({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Navbar(),
+              const Navbar(),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -1462,6 +1463,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   ],
                 ),
               ),
+              const Footer()
             ],
           ),
         ),

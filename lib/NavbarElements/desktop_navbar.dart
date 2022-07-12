@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 
 import '../HomepageElements/homepage.dart';
+import '../ContactElements/contact.dart';
 
 class DesktopNav extends StatefulWidget {
   const DesktopNav({Key? key}) : super(key: key);
@@ -122,7 +123,7 @@ class _DesktopNavState extends State<DesktopNav> {
                     setState(() {
                       if (DesktopNav.activePage != "Contact") {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const Homepage()));
+                            builder: (context) => const Contact()));
                         DesktopNav.activePage = 'Contact';
                       }
                     });
