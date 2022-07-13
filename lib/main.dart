@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:hive_flutter/adapters.dart';
+import 'package:pacifica/model/User.dart';
 
 import 'HomepageElements/homepage.dart';
 import 'ContactElements/contact.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final appDocumentDirectory =
-      await path_provider.getApplicationDocumentsDirectory();
-  Hive.init(appDocumentDirectory.path);
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserAdapter());
   runApp(MyApp());
 }
 

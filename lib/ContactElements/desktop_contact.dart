@@ -3,9 +3,11 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../NavbarElements/navbar.dart';
 import '../FooterElements/footer.dart';
+import '../model/User.dart';
 
 class DesktopContact extends StatefulWidget {
   const DesktopContact({Key? key}) : super(key: key);
@@ -99,6 +101,9 @@ class _DesktopContactState extends State<DesktopContact> {
         }
         return null;
       },
+      onSaved: (value) {
+        _firstName = value.toString();
+      },
     );
   }
 
@@ -128,6 +133,9 @@ class _DesktopContactState extends State<DesktopContact> {
           return "This field is required";
         }
         return null;
+      },
+      onSaved: (value) {
+        _lastName = value.toString();
       },
     );
   }
@@ -166,6 +174,9 @@ class _DesktopContactState extends State<DesktopContact> {
         }
         return null;
       },
+      onSaved: (value) {
+        _email = value.toString();
+      },
     );
   }
 
@@ -195,6 +206,9 @@ class _DesktopContactState extends State<DesktopContact> {
           return "This field is required";
         }
         return null;
+      },
+      onSaved: (value) {
+        _company = value.toString();
       },
     );
   }
@@ -231,6 +245,9 @@ class _DesktopContactState extends State<DesktopContact> {
         }
         return null;
       },
+      onSaved: (value) {
+        _phoneNumber = value.toString();
+      },
     );
   }
 
@@ -252,112 +269,155 @@ class _DesktopContactState extends State<DesktopContact> {
       ),
       maxLines: 10,
       style: TextStyle(fontSize: 25, color: Colors.white),
-      validator: (String? value) {
-        if (value.toString().isEmpty) {
-          return "This field is required";
-        }
-        return null;
+      onSaved: (value) {
+        _projectDescription = value.toString();
       },
     );
+  }
+
+  void addUser(User user) {
+    final usersBox = Hive.box("users");
+    usersBox.add(user);
+    print(usersBox.length);
+  }
+
+  Widget showUsers() {
+    return WatchBoxBuilder(
+        box: Hive.box("users"),
+        builder: (context, usersBox) {
+          return ListView.builder(
+            itemCount: usersBox.length,
+            itemBuilder: ((context, index) {
+              final user = usersBox.getAt(index) as User;
+              return ListTile(
+                title: Text(user.firstName),
+              );
+            }),
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Hive.openBox('users'),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
-              return (Text(snapshot.error.toString()));
-            } else {
-              return Scaffold(
-                body: Container(
-                  child: SingleChildScrollView(
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          const Navbar(),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                  image:
-                                      AssetImage('assets/images/oldport.jpg'),
-                                  fit: BoxFit.cover),
-                            ),
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 1850,
-                                    height:
-                                        MediaQuery.of(context).size.height - 30,
-                                    color: Colors.black.withOpacity(0.7),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 50, horizontal: 50),
-                                    child: Column(
+      future: Hive.openBox('users'),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return (Text(snapshot.error.toString()));
+          } else {
+            return Scaffold(
+              body: Container(
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        const Navbar(),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/oldport.jpg'),
+                                fit: BoxFit.cover),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 1850,
+                                height: MediaQuery.of(context).size.height - 30,
+                                color: Colors.black.withOpacity(0.7),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 50, horizontal: 50),
+                                child: Column(
+                                  children: [
+                                    Row(
                                       children: [
-                                        Row(
-                                          children: [
-                                            Expanded(child: _buildFirstName()),
-                                            Expanded(child: _buildLastName()),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Row(
-                                          children: [
-                                            Expanded(child: _buildEmail()),
-                                            Expanded(
-                                                child: _buildPhoneNumber()),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Row(
-                                          children: [
-                                            Expanded(child: _buildCompany()),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 20),
-                                        const Text(
-                                          "PLEASE TELL US ABOUT THE PROJECT",
-                                          style: TextStyle(
-                                              fontSize: 30,
-                                              color: Colors.white),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        _buildProjectDescription(),
-                                        const SizedBox(height: 30),
-                                        Container(
-                                          height: 40,
-                                          width: 100,
-                                          child: RaisedButton(
-                                              onPressed: () {},
-                                              hoverColor: Colors.grey,
-                                              child: Text(
-                                                "SUBMIT",
-                                                style: GoogleFonts.abel(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )),
-                                        )
+                                        Expanded(child: _buildFirstName()),
+                                        Expanded(child: _buildLastName()),
                                       ],
                                     ),
-                                  )
-                                ]),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: [
+                                        Expanded(child: _buildEmail()),
+                                        Expanded(child: _buildPhoneNumber()),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: [
+                                        Expanded(child: _buildCompany()),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    const Text(
+                                      "PLEASE TELL US ABOUT THE PROJECT",
+                                      style: TextStyle(
+                                          fontSize: 30, color: Colors.white),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    _buildProjectDescription(),
+                                    const SizedBox(height: 30),
+                                    Container(
+                                      height: 40,
+                                      width: 100,
+                                      child: RaisedButton(
+                                        onPressed: () {
+                                          // Checks if all the required fields are filled.
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            _formKey.currentState?.save();
+                                            final newUser = User(
+                                                _firstName,
+                                                _lastName,
+                                                _email,
+                                                _phoneNumber,
+                                                _company,
+                                                _projectDescription);
+                                            addUser(newUser);
+                                          } else {
+                                            return;
+                                          }
+                                        },
+                                        hoverColor: Colors.grey,
+                                        child: Text(
+                                          "SUBMIT",
+                                          style: GoogleFonts.abel(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
-                          const Footer(),
-                        ],
-                      ),
+                        ),
+                        Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 500,
+                            child: showUsers()),
+                        const Footer(),
+                      ],
                     ),
                   ),
                 ),
-              );
-            }
+              ),
+            );
           }
-          return Scaffold();
-        });
+        }
+        return Scaffold();
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    Hive.close;
+    super.dispose();
   }
 }

@@ -31,7 +31,6 @@ dependencies:
     sdk: flutter
   hive: ^2.0.5
   hive_flutter: ^1.1.0
-  path_provider: ^2.0.11
   
 
 
@@ -41,6 +40,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^3.0.1
   bulleted_list: ^0.0.1+0.1a
+  json_serializable: ^6.3.1
 
 
 dev_dependencies:
