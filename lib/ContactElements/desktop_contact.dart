@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 
 import '../NavbarElements/navbar.dart';
 import '../FooterElements/footer.dart';
@@ -262,85 +263,101 @@ class _DesktopContactState extends State<DesktopContact> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                const Navbar(),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/oldport.jpg'),
-                        fit: BoxFit.cover),
-                  ),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 1850,
-                          height: MediaQuery.of(context).size.height - 30,
-                          color: Colors.black.withOpacity(0.7),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 50, horizontal: 50),
-                          child: Column(
-                            children: [
-                              Row(
+    return FutureBuilder(
+        future: Hive.openBox('users'),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return (Text(snapshot.error.toString()));
+            } else {
+              return Scaffold(
+                body: Container(
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          const Navbar(),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image:
+                                      AssetImage('assets/images/oldport.jpg'),
+                                  fit: BoxFit.cover),
+                            ),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Expanded(child: _buildFirstName()),
-                                  Expanded(child: _buildLastName()),
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              Row(
-                                children: [
-                                  Expanded(child: _buildEmail()),
-                                  Expanded(child: _buildPhoneNumber()),
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              Row(
-                                children: [
-                                  Expanded(child: _buildCompany()),
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              const Text(
-                                "PLEASE TELL US ABOUT THE PROJECT",
-                                style: TextStyle(
-                                    fontSize: 30, color: Colors.white),
-                              ),
-                              const SizedBox(height: 20),
-                              _buildProjectDescription(),
-                              const SizedBox(height: 30),
-                              Container(
-                                height: 40,
-                                width: 100,
-                                child: RaisedButton(
-                                    onPressed: () {},
-                                    hoverColor: Colors.grey,
-                                    child: Text(
-                                      "SUBMIT",
-                                      style: GoogleFonts.abel(
-                                          fontWeight: FontWeight.bold),
-                                    )),
-                              )
-                            ],
+                                  Container(
+                                    width: 1850,
+                                    height:
+                                        MediaQuery.of(context).size.height - 30,
+                                    color: Colors.black.withOpacity(0.7),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 50, horizontal: 50),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Expanded(child: _buildFirstName()),
+                                            Expanded(child: _buildLastName()),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Row(
+                                          children: [
+                                            Expanded(child: _buildEmail()),
+                                            Expanded(
+                                                child: _buildPhoneNumber()),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Row(
+                                          children: [
+                                            Expanded(child: _buildCompany()),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 20),
+                                        const Text(
+                                          "PLEASE TELL US ABOUT THE PROJECT",
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.white),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        _buildProjectDescription(),
+                                        const SizedBox(height: 30),
+                                        Container(
+                                          height: 40,
+                                          width: 100,
+                                          child: RaisedButton(
+                                              onPressed: () {},
+                                              hoverColor: Colors.grey,
+                                              child: Text(
+                                                "SUBMIT",
+                                                style: GoogleFonts.abel(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ]),
                           ),
-                        )
-                      ]),
+                          const Footer(),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                const Footer(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+              );
+            }
+          }
+          return Scaffold();
+        });
   }
 }
