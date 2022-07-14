@@ -38,6 +38,8 @@ class _DesktopContactState extends State<DesktopContact> {
   final companyFieldKey = GlobalKey<FormFieldState>();
   final phoneFieldKey = GlobalKey<FormFieldState>();
 
+  bool isShowUsers = false;
+
   @override
   void initState() {
     super.initState();
@@ -283,18 +285,112 @@ class _DesktopContactState extends State<DesktopContact> {
 
   Widget showUsers() {
     return WatchBoxBuilder(
-        box: Hive.box("users"),
-        builder: (context, usersBox) {
-          return ListView.builder(
-            itemCount: usersBox.length,
-            itemBuilder: ((context, index) {
-              final user = usersBox.getAt(index) as User;
-              return ListTile(
-                title: Text(user.firstName),
-              );
-            }),
-          );
-        });
+      box: Hive.box("users"),
+      builder: (context, usersBox) {
+        return ListView.builder(
+          itemCount: usersBox.length,
+          itemBuilder: ((context, index) {
+            final user = usersBox.getAt(index) as User;
+            return DataTable(
+              columns: [
+                DataColumn(
+                  label: Container(
+                    width: 200,
+                    child: Text(
+                      "Name",
+                      style: GoogleFonts.abel(
+                          fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    width: 200,
+                    child: Text(
+                      "Email",
+                      style: GoogleFonts.abel(
+                          fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    width: 200,
+                    child: Text(
+                      "Phone",
+                      style: GoogleFonts.abel(
+                          fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    width: 200,
+                    child: Text(
+                      "Company",
+                      style: GoogleFonts.abel(
+                          fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                const DataColumn(
+                  label: Text(
+                    "",
+                  ),
+                ),
+              ],
+              rows: [
+                DataRow(
+                  cells: [
+                    DataCell(
+                      Text(
+                        "${user.firstName}  ${user.lastName}",
+                        style: GoogleFonts.abel(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    DataCell(
+                      Text(
+                        user.email,
+                        style: GoogleFonts.abel(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    DataCell(
+                      Text(
+                        user.phoneNumber,
+                        style: GoogleFonts.abel(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    DataCell(
+                      Text(
+                        user.company,
+                        style: GoogleFonts.abel(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    DataCell(InkWell(
+                      onTap: (() {
+                        usersBox.deleteAt(index);
+                      }),
+                      child: const Icon(
+                        Icons.delete_outline,
+                        size: 35,
+                      ),
+                    ))
+                  ],
+                ),
+              ],
+            );
+          }),
+        );
+      },
+    );
   }
 
   @override
@@ -362,34 +458,59 @@ class _DesktopContactState extends State<DesktopContact> {
                                     const SizedBox(height: 20),
                                     _buildProjectDescription(),
                                     const SizedBox(height: 30),
-                                    Container(
-                                      height: 40,
-                                      width: 100,
-                                      child: RaisedButton(
-                                        onPressed: () {
-                                          // Checks if all the required fields are filled.
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            _formKey.currentState?.save();
-                                            final newUser = User(
-                                                _firstName,
-                                                _lastName,
-                                                _email,
-                                                _phoneNumber,
-                                                _company,
-                                                _projectDescription);
-                                            addUser(newUser);
-                                          } else {
-                                            return;
-                                          }
-                                        },
-                                        hoverColor: Colors.grey,
-                                        child: Text(
-                                          "SUBMIT",
-                                          style: GoogleFonts.abel(
-                                              fontWeight: FontWeight.bold),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 40,
+                                          width: 100,
+                                          child: RaisedButton(
+                                            onPressed: () {
+                                              // Checks if all the required fields are filled.
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                _formKey.currentState?.save();
+                                                final newUser = User(
+                                                    _firstName,
+                                                    _lastName,
+                                                    _email,
+                                                    _phoneNumber,
+                                                    _company,
+                                                    _projectDescription);
+                                                addUser(newUser);
+                                                _formKey.currentState?.reset();
+                                              } else {
+                                                return;
+                                              }
+                                            },
+                                            hoverColor: Colors.grey,
+                                            child: Text(
+                                              "SUBMIT",
+                                              style: GoogleFonts.abel(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                        const SizedBox(width: 30),
+                                        Container(
+                                          height: 40,
+                                          width: 100,
+                                          child: RaisedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                isShowUsers = true;
+                                              });
+                                            },
+                                            hoverColor: Colors.grey,
+                                            child: Text(
+                                              "View Users",
+                                              style: GoogleFonts.abel(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -398,9 +519,10 @@ class _DesktopContactState extends State<DesktopContact> {
                           ),
                         ),
                         Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 500,
-                            child: showUsers()),
+                          width: MediaQuery.of(context).size.width,
+                          height: 500,
+                          child: isShowUsers ? showUsers() : Container(),
+                        ),
                         const Footer(),
                       ],
                     ),

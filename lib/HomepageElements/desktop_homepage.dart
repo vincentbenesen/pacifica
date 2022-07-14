@@ -15,21 +15,52 @@ class DesktopHomepage extends StatefulWidget {
 }
 
 class _DesktopHomepageState extends State<DesktopHomepage> {
+  late ScrollController _controller;
+  double pixels = 0.0;
+
+  @override
+  void initState() {
+    _controller = ScrollController();
+    _controller.addListener(() {
+      setState(() {
+        pixels = _controller.position.pixels;
+        print(pixels);
+      });
+    });
+    super.initState();
+  }
+
+  // When the user hovers on the the numbers. These bool values are used to change the color of the text
   bool isHoverOne = false;
   bool isHoverTwo = false;
   bool isHoverThree = false;
   bool isHoverFour = false;
+
+  // The variables below are used for animation (To change the opacity and animation of each texts)
+  // These variables are used used for animating 360Vision section
+  double newOpacity1 = 0.0;
+  double newPos1 = 500;
+
+  // These variables are used for animating 360 Dynamic Process
+  double newOpacity2 = 0.0;
+  double originateNewPos = 50;
+  double underwriteNewPos = 140;
+  double economicsNewPos = 250;
+  double riskNewPos = 320;
+  double closureNewPos = 460;
+
   @override
   Widget build(BuildContext context) {
     final currentW = MediaQuery.of(context).size.width;
     final currentH = MediaQuery.of(context).size.height;
-    print(currentW);
     return Scaffold(
       body: Container(
         child: SingleChildScrollView(
+          controller: _controller,
           child: Column(
             children: [
               const Navbar(),
+              // The first page after the navbar
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -71,6 +102,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   ],
                 ),
               ),
+              // The page with number one
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - 300,
@@ -140,6 +172,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   ],
                 ),
               ),
+              // The page with number two
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - 300,
@@ -222,6 +255,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   ],
                 ),
               ),
+              // The page that talks about 360Vision
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - 250,
@@ -255,221 +289,280 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Container(
-                        width: 700,
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.grey,
-                              radius: 30,
-                              child: InkWell(
-                                onTap: () {},
-                                onHover: (hovered) {
-                                  setState(() {
-                                    isHoverOne = hovered;
-                                  });
-                                },
-                                child: Text(
-                                  "1",
-                                  style: GoogleFonts.abel(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                      color: isHoverOne
-                                          ? Colors.black
-                                          : Colors.white),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Real Estate Optimization Services Platform",
-                                    style: GoogleFonts.abel(
-                                        fontSize: 20,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Container(
-                                    width: 500,
+                      // Number one: Real Estate Optimization Services Platform
+                      AnimatedOpacity(
+                        opacity: pixels >= 2100 ? 1.0 : newOpacity1,
+                        duration: const Duration(seconds: 1),
+                        onEnd: () {
+                          setState(() {
+                            newOpacity1 = 1.0;
+                          });
+                        },
+                        child: AnimatedPadding(
+                          padding: EdgeInsets.only(
+                              left: pixels >= 2100 ? 0.0 : newPos1),
+                          duration: const Duration(seconds: 1),
+                          onEnd: () {
+                            setState(() {
+                              newPos1 = 0.0;
+                            });
+                          },
+                          child: Container(
+                            width: 700,
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                  radius: 30,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    onHover: (hovered) {
+                                      setState(() {
+                                        isHoverOne = hovered;
+                                      });
+                                    },
                                     child: Text(
-                                      "A vertically integrated professional services platform providing project Feasibility Analytics, Strategic Master Planning, and optimal Project Market Positioning Strategies",
+                                      "1",
                                       style: GoogleFonts.abel(
-                                          fontSize: 15, color: Colors.white),
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                          color: isHoverOne
+                                              ? Colors.black
+                                              : Colors.white),
                                     ),
                                   ),
-                                ],
-                              ),
-                            )
-                          ],
+                                ),
+                                const SizedBox(width: 20),
+                                Container(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Real Estate Optimization Services Platform",
+                                        style: GoogleFonts.abel(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        width: 500,
+                                        child: Text(
+                                          "A vertically integrated professional services platform providing project Feasibility Analytics, Strategic Master Planning, and optimal Project Market Positioning Strategies",
+                                          style: GoogleFonts.abel(
+                                              fontSize: 15,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Container(
-                        width: 700,
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.grey,
-                              radius: 30,
-                              child: InkWell(
-                                onTap: () {},
-                                onHover: (hovered) {
-                                  setState(() {
-                                    isHoverTwo = hovered;
-                                  });
-                                },
-                                child: Text(
-                                  "2",
-                                  style: GoogleFonts.abel(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                      color: isHoverTwo
-                                          ? Colors.black
-                                          : Colors.white),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Operations & Execution Resources",
-                                    style: GoogleFonts.abel(
-                                        fontSize: 20,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Container(
-                                    width: 500,
+                      // Number two: Operations & Execution Resources
+                      AnimatedOpacity(
+                        opacity: pixels >= 2100 ? 1.0 : newOpacity1,
+                        duration: const Duration(seconds: 1),
+                        child: AnimatedPadding(
+                          padding: EdgeInsets.only(
+                              right: pixels >= 2100 ? 0.0 : newPos1),
+                          duration: const Duration(seconds: 1),
+                          child: Container(
+                            width: 700,
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                  radius: 30,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    onHover: (hovered) {
+                                      setState(() {
+                                        isHoverTwo = hovered;
+                                      });
+                                    },
                                     child: Text(
-                                      "A seasoned Management Team with core expertise in the development, operation and execution of complex mixed use real estate and infrastructure projects globally",
+                                      "2",
                                       style: GoogleFonts.abel(
-                                          fontSize: 15, color: Colors.white),
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                          color: isHoverTwo
+                                              ? Colors.black
+                                              : Colors.white),
                                     ),
                                   ),
-                                ],
-                              ),
-                            )
-                          ],
+                                ),
+                                const SizedBox(width: 20),
+                                Container(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Operations & Execution Resources",
+                                        style: GoogleFonts.abel(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        width: 500,
+                                        child: Text(
+                                          "A seasoned Management Team with core expertise in the development, operation and execution of complex mixed use real estate and infrastructure projects globally",
+                                          style: GoogleFonts.abel(
+                                              fontSize: 15,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Container(
-                        width: 700,
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.grey,
-                              radius: 30,
-                              child: InkWell(
-                                onTap: () {},
-                                onHover: (hovered) {
-                                  setState(() {
-                                    isHoverThree = hovered;
-                                  });
-                                },
-                                child: Text(
-                                  "3",
-                                  style: GoogleFonts.abel(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                      color: isHoverThree
-                                          ? Colors.black
-                                          : Colors.white),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Global Asset Management",
-                                    style: GoogleFonts.abel(
-                                        fontSize: 20,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Container(
-                                    width: 500,
+                      // Number three: Global Asset Management
+                      AnimatedOpacity(
+                        opacity: pixels >= 2100 ? 1.0 : newOpacity1,
+                        duration: const Duration(seconds: 1),
+                        child: AnimatedPadding(
+                          padding: EdgeInsets.only(
+                              left: pixels >= 2100 ? 0.0 : newPos1),
+                          duration: const Duration(seconds: 1),
+                          child: Container(
+                            width: 700,
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                  radius: 30,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    onHover: (hovered) {
+                                      setState(() {
+                                        isHoverThree = hovered;
+                                      });
+                                    },
                                     child: Text(
-                                      "Active Asset Management resources focused on the optimization and protection of Real Estate, Infrastructure and Operational Asset Values",
+                                      "3",
                                       style: GoogleFonts.abel(
-                                          fontSize: 15, color: Colors.white),
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                          color: isHoverThree
+                                              ? Colors.black
+                                              : Colors.white),
                                     ),
                                   ),
-                                ],
-                              ),
-                            )
-                          ],
+                                ),
+                                const SizedBox(width: 20),
+                                Container(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Global Asset Management",
+                                        style: GoogleFonts.abel(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        width: 500,
+                                        child: Text(
+                                          "Active Asset Management resources focused on the optimization and protection of Real Estate, Infrastructure and Operational Asset Values",
+                                          style: GoogleFonts.abel(
+                                              fontSize: 15,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Container(
-                        width: 700,
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.grey,
-                              radius: 30,
-                              child: InkWell(
-                                onTap: () {},
-                                onHover: (hovered) {
-                                  setState(() {
-                                    isHoverFour = hovered;
-                                  });
-                                },
-                                child: Text(
-                                  "4",
-                                  style: GoogleFonts.abel(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                      color: isHoverFour
-                                          ? Colors.black
-                                          : Colors.white),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Global Financial Resources",
-                                    style: GoogleFonts.abel(
-                                        fontSize: 20,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Container(
-                                    width: 500,
+                      // Number four: Global Financial Resources
+                      AnimatedOpacity(
+                        opacity: pixels >= 2100 ? 1.0 : newOpacity1,
+                        duration: const Duration(seconds: 1),
+                        child: AnimatedPadding(
+                          padding: EdgeInsets.only(
+                              right: pixels >= 2100 ? 0.0 : newPos1),
+                          duration: const Duration(seconds: 1),
+                          child: Container(
+                            width: 700,
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                  radius: 30,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    onHover: (hovered) {
+                                      setState(() {
+                                        isHoverFour = hovered;
+                                      });
+                                    },
                                     child: Text(
-                                      "Financial solutions tailored to individual project requirements; Acquisitions, M&A, Distressed Assets Project Re-structuring, Project Optimization and Strategic Exits",
+                                      "4",
                                       style: GoogleFonts.abel(
-                                          fontSize: 15, color: Colors.white),
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                          color: isHoverFour
+                                              ? Colors.black
+                                              : Colors.white),
                                     ),
                                   ),
-                                ],
-                              ),
-                            )
-                          ],
+                                ),
+                                const SizedBox(width: 20),
+                                Container(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Global Financial Resources",
+                                        style: GoogleFonts.abel(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        width: 500,
+                                        child: Text(
+                                          "Financial solutions tailored to individual project requirements; Acquisitions, M&A, Distressed Assets Project Re-structuring, Project Optimization and Strategic Exits",
+                                          style: GoogleFonts.abel(
+                                              fontSize: 15,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
+              // The page that talks about 360 Dynamic Process
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -746,104 +839,209 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                                 : Container(
                                     child: Row(
                                       children: [
-                                        Column(
-                                          children: [
-                                            Text(
-                                              "ORIGINATE",
-                                              style: GoogleFonts.abel(
-                                                  fontSize: 30,
-                                                  color: Colors.white),
+                                        // Originate Section
+                                        AnimatedOpacity(
+                                          opacity: pixels >= 2900
+                                              ? 1.0
+                                              : newOpacity2,
+                                          duration: const Duration(seconds: 1),
+                                          onEnd: () {
+                                            setState(() {
+                                              newOpacity2 = 1.0;
+                                            });
+                                          },
+                                          child: AnimatedPadding(
+                                            padding: EdgeInsets.only(
+                                                top: pixels >= 2900
+                                                    ? 0.0
+                                                    : originateNewPos),
+                                            duration:
+                                                const Duration(seconds: 1),
+                                            onEnd: () {
+                                              setState(() {
+                                                originateNewPos = 0.0;
+                                              });
+                                            },
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  "ORIGINATE",
+                                                  style: GoogleFonts.abel(
+                                                      fontSize: 30,
+                                                      color: Colors.white),
+                                                ),
+                                                Container(
+                                                  width: 300,
+                                                  child: Text(
+                                                    "360 Pacifica drives Off-Market deal flow from diverse global networks. This qualified deal origination process is a significant market advantage",
+                                                    style: GoogleFonts.abel(
+                                                        fontSize: 20,
+                                                        color: Colors.white),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            Container(
-                                              width: 300,
-                                              child: Text(
-                                                "360 Pacifica drives Off-Market deal flow from diverse global networks. This qualified deal origination process is a significant market advantage",
-                                                style: GoogleFonts.abel(
-                                                    fontSize: 20,
-                                                    color: Colors.white),
-                                              ),
-                                            )
-                                          ],
+                                          ),
                                         ),
                                         const SizedBox(width: 30),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              "UNDERWRITE",
-                                              style: GoogleFonts.abel(
-                                                  fontSize: 30,
-                                                  color: Colors.white),
+                                        // Underwrite Section
+                                        AnimatedOpacity(
+                                          opacity: pixels >= 2900
+                                              ? 1.0
+                                              : newOpacity2,
+                                          duration: const Duration(seconds: 1),
+                                          child: AnimatedPadding(
+                                            padding: EdgeInsets.only(
+                                                top: pixels >= 2900
+                                                    ? 0.0
+                                                    : underwriteNewPos),
+                                            duration:
+                                                const Duration(seconds: 1),
+                                            onEnd: () {
+                                              setState(() {
+                                                underwriteNewPos = 0.0;
+                                              });
+                                            },
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  "UNDERWRITE",
+                                                  style: GoogleFonts.abel(
+                                                      fontSize: 30,
+                                                      color: Colors.white),
+                                                ),
+                                                Container(
+                                                  width: 300,
+                                                  child: Text(
+                                                    "Disciplined institutional quality underwriting isolates risk and qualifies underlying transactional economic fundamentals. A value based methodology assures highest & best returns to Stakeholders",
+                                                    style: GoogleFonts.abel(
+                                                        fontSize: 20,
+                                                        color: Colors.white),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            Container(
-                                              width: 300,
-                                              child: Text(
-                                                "Disciplined institutional quality underwriting isolates risk and qualifies underlying transactional economic fundamentals. A value based methodology assures highest & best returns to Stakeholders",
-                                                style: GoogleFonts.abel(
-                                                    fontSize: 20,
-                                                    color: Colors.white),
-                                              ),
-                                            )
-                                          ],
+                                          ),
                                         ),
                                         const SizedBox(width: 30),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              "ECONOMICS",
-                                              style: GoogleFonts.abel(
-                                                  fontSize: 30,
-                                                  color: Colors.white),
+                                        // Economics Section
+                                        AnimatedOpacity(
+                                          opacity: pixels >= 2900
+                                              ? 1.0
+                                              : newOpacity2,
+                                          duration: const Duration(seconds: 1),
+                                          child: AnimatedPadding(
+                                            padding: EdgeInsets.only(
+                                                top: pixels >= 2900
+                                                    ? 0.0
+                                                    : economicsNewPos),
+                                            duration:
+                                                const Duration(seconds: 1),
+                                            onEnd: () {
+                                              setState(() {
+                                                economicsNewPos = 0.0;
+                                              });
+                                            },
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  "ECONOMICS",
+                                                  style: GoogleFonts.abel(
+                                                      fontSize: 30,
+                                                      color: Colors.white),
+                                                ),
+                                                Container(
+                                                  width: 300,
+                                                  child: Text(
+                                                    "Bondability, Issuance of Securities for Subscriptions, Formation of Dividend Returns, Integrated Credit Enhancement. Value Model stress testing and transactional formation",
+                                                    style: GoogleFonts.abel(
+                                                        fontSize: 20,
+                                                        color: Colors.white),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            Container(
-                                              width: 300,
-                                              child: Text(
-                                                "Bondability, Issuance of Securities for Subscriptions, Formation of Dividend Returns, Integrated Credit Enhancement. Value Model stress testing and transactional formation",
-                                                style: GoogleFonts.abel(
-                                                    fontSize: 20,
-                                                    color: Colors.white),
-                                              ),
-                                            )
-                                          ],
+                                          ),
                                         ),
                                         const SizedBox(width: 30),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              "RISK",
-                                              style: GoogleFonts.abel(
-                                                  fontSize: 30,
-                                                  color: Colors.white),
+                                        // Risk Section
+                                        AnimatedOpacity(
+                                          opacity: pixels >= 2900
+                                              ? 1.0
+                                              : newOpacity2,
+                                          duration: const Duration(seconds: 1),
+                                          child: AnimatedPadding(
+                                            padding: EdgeInsets.only(
+                                                top: pixels >= 2900
+                                                    ? 0.0
+                                                    : riskNewPos),
+                                            duration:
+                                                const Duration(seconds: 1),
+                                            onEnd: () {
+                                              setState(() {
+                                                riskNewPos = 0.0;
+                                              });
+                                            },
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  "RISK",
+                                                  style: GoogleFonts.abel(
+                                                      fontSize: 30,
+                                                      color: Colors.white),
+                                                ),
+                                                Container(
+                                                  width: 300,
+                                                  child: Text(
+                                                    "Risk Transfer & Management, Taxation Management, Hedge Risks, Repatriations & Fund Management, supported by ongoing Active Asset Management protects value long-term",
+                                                    style: GoogleFonts.abel(
+                                                        fontSize: 20,
+                                                        color: Colors.white),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            Container(
-                                              width: 300,
-                                              child: Text(
-                                                "Risk Transfer & Management, Taxation Management, Hedge Risks, Repatriations & Fund Management, supported by ongoing Active Asset Management protects value long-term",
-                                                style: GoogleFonts.abel(
-                                                    fontSize: 20,
-                                                    color: Colors.white),
-                                              ),
-                                            )
-                                          ],
+                                          ),
                                         ),
                                         const SizedBox(width: 30),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              "CLOSURE",
-                                              style: GoogleFonts.abel(
-                                                  fontSize: 30,
-                                                  color: Colors.white),
+                                        // Closure Section
+                                        AnimatedOpacity(
+                                          opacity: pixels >= 2900
+                                              ? 1.0
+                                              : newOpacity2,
+                                          duration: const Duration(seconds: 1),
+                                          child: AnimatedPadding(
+                                            padding: EdgeInsets.only(
+                                                top: pixels >= 2900
+                                                    ? 0.0
+                                                    : closureNewPos),
+                                            duration:
+                                                const Duration(seconds: 1),
+                                            onEnd: () {
+                                              setState(() {
+                                                closureNewPos = 0.0;
+                                              });
+                                            },
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  "CLOSURE",
+                                                  style: GoogleFonts.abel(
+                                                      fontSize: 30,
+                                                      color: Colors.white),
+                                                ),
+                                                Container(
+                                                  width: 300,
+                                                  child: Text(
+                                                    "Implementation of Operational & Management Plans focused on Underlying Asset Performance & Sustainability. Exit Strategy Management and Value Creation Model",
+                                                    style: GoogleFonts.abel(
+                                                        fontSize: 20,
+                                                        color: Colors.white),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            Container(
-                                              width: 300,
-                                              child: Text(
-                                                "Implementation of Operational & Management Plans focused on Underlying Asset Performance & Sustainability. Exit Strategy Management and Value Creation Model",
-                                                style: GoogleFonts.abel(
-                                                    fontSize: 20,
-                                                    color: Colors.white),
-                                              ),
-                                            )
-                                          ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -855,6 +1053,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   ),
                 ),
               ),
+              // The page with Stad olympic
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -910,6 +1109,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   ],
                 ),
               ),
+              // The page with number three
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - 300,
@@ -980,6 +1180,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   ],
                 ),
               ),
+              // The page with number four
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - 300,
@@ -1043,6 +1244,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   ],
                 ),
               ),
+              // The page with 360AMI
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -1091,6 +1293,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   ],
                 ),
               ),
+              // The page with 5 things that talks about 360AMI
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -1242,6 +1445,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   ),
                 ),
               ),
+              // The page with number five
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - 300,
@@ -1322,6 +1526,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   ],
                 ),
               ),
+              // The page with number six
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - 300,
@@ -1394,6 +1599,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   ],
                 ),
               ),
+              // The page with number seven
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - 300,
@@ -1461,6 +1667,41 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                       ),
                     ),
                   ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image:
+                          AssetImage("assets/images/undergroundmontreal2.jpg"),
+                      fit: BoxFit.cover),
+                ),
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "360Pacifica",
+                        style: GoogleFonts.abel(
+                          fontSize: 60,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        "BUILDING FUTURES",
+                        style:
+                            GoogleFonts.abel(fontSize: 20, color: Colors.white),
+                      ),
+                      Text(
+                        "360 PACIFICA ENVIRONMENTAL STEWARDSHIP",
+                        style:
+                            GoogleFonts.abel(fontSize: 20, color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const Footer()
