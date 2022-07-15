@@ -49,6 +49,19 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
   double riskNewPos = 320;
   double closureNewPos = 460;
 
+  // These variables are used for animating 360AMI sections
+  double newOpacity3 = 0.0;
+
+  // These variable are usef for animating 5 things about 360AMI
+  double newOpacity4 = 0.0;
+  double newPos2 = 200;
+  double newOpacity5 = 0.0;
+  double newOpacity6 = 0.0;
+  double newPos3 = 200;
+
+  // This variable is for animating the last section before footer
+  double newOpacity7 = 0.0;
+
   @override
   Widget build(BuildContext context) {
     final currentW = MediaQuery.of(context).size.width;
@@ -1117,7 +1130,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width / 2,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(
                               "assets/images/undergroundmontreal.jpg"),
@@ -1172,6 +1185,25 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                                     color: Color.fromARGB(255, 66, 65, 65),
                                     fontSize: 15),
                               ),
+                            ),
+                            const SizedBox(height: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                RaisedButton(
+                                  onPressed: (() {
+                                    // Navigator.of(context).push(
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) =>
+                                    //             const Homepage()));
+                                  }),
+                                  child: Text("Click",
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.white)),
+                                  color: Colors.black,
+                                  hoverColor: Colors.grey,
+                                )
+                              ],
                             )
                           ],
                         ),
@@ -1267,10 +1299,19 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            "360AMI",
-                            style: GoogleFonts.abel(
-                                fontSize: 50, color: Colors.white),
+                          AnimatedOpacity(
+                            opacity: pixels >= 5700 ? 1.0 : 0.0,
+                            duration: Duration(seconds: 1),
+                            onEnd: () {
+                              setState(() {
+                                newOpacity3 = 1.0;
+                              });
+                            },
+                            child: Text(
+                              "360AMI",
+                              style: GoogleFonts.abel(
+                                  fontSize: 50, color: Colors.white),
+                            ),
                           ),
                           const SizedBox(height: 10),
                           Text(
@@ -1311,133 +1352,187 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        child: Column(
                           children: [
-                            Container(
-                              child: Column(
-                                children: [
-                                  Row(
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AnimatedOpacity(
+                                  opacity: pixels >= 6700 ? 1.0 : newOpacity4,
+                                  duration: const Duration(seconds: 1),
+                                  onEnd: () {
+                                    setState(() {
+                                      newOpacity4 = 1.0;
+                                    });
+                                  },
+                                  child: AnimatedPadding(
+                                    padding: EdgeInsets.only(
+                                        right: pixels >= 6700 ? 0.0 : newPos2),
+                                    duration: const Duration(seconds: 1),
+                                    onEnd: () {
+                                      setState(() {
+                                        newPos2 = 0.0;
+                                      });
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "DEPTH OF EXPERIENCE",
+                                          style: GoogleFonts.abel(
+                                              fontSize: 30,
+                                              color: Colors.white),
+                                        ),
+                                        Container(
+                                          width: 300,
+                                          height: 200,
+                                          child: Text(
+                                            "Our ability to add value to a project lies in our integrated platform. We deliver highly trained professionals in conjunction with proven process optimization focused on maximization of owner returns and long-term value preservation.",
+                                            style: GoogleFonts.abel(
+                                                fontSize: 15,
+                                                color: Colors.white),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 150),
+                                AnimatedOpacity(
+                                  opacity: pixels >= 6700 ? 1.0 : newOpacity4,
+                                  duration: Duration(seconds: 1),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        children: [
-                                          Text(
-                                            "1. DEPTH OF EXPERIENCE",
-                                            style: GoogleFonts.abel(
-                                                fontSize: 30,
-                                                color: Colors.white),
-                                          ),
-                                          Container(
-                                            width: 300,
-                                            height: 200,
-                                            child: Text(
-                                              "Our ability to add value to a project lies in our integrated platform. We deliver highly trained professionals in conjunction with proven process optimization focused on maximization of owner returns and long-term value preservation.",
-                                              style: GoogleFonts.abel(
-                                                  fontSize: 15,
-                                                  color: Colors.white),
-                                            ),
-                                          )
-                                        ],
+                                      Text(
+                                        "BOLD THINKING",
+                                        style: GoogleFonts.abel(
+                                            fontSize: 30, color: Colors.white),
                                       ),
-                                      const SizedBox(width: 80),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "2. BOLD THINKING",
-                                            style: GoogleFonts.abel(
-                                                fontSize: 30,
-                                                color: Colors.white),
-                                          ),
-                                          Container(
-                                            width: 300,
-                                            height: 200,
-                                            child: Text(
-                                              "We continually invest in research and product development, we are leaders in process management, professional practices and the innovation of technical practices that have become standard in the business of global real estate and infrastructure asset management. We employ the latest technological advances and strategic solutions in market intelligence, strategic planning, and overall project execution.",
-                                              style: GoogleFonts.abel(
-                                                  fontSize: 15,
-                                                  color: Colors.white),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      const SizedBox(width: 80),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "3. ORGANIZATIONAL STRENGTH",
-                                            style: GoogleFonts.abel(
-                                                fontSize: 30,
-                                                color: Colors.white),
-                                          ),
-                                          Container(
-                                            width: 300,
-                                            height: 200,
-                                            child: Text(
-                                              "Our integrated platform brings broad based expertise across the entire spectrum of Asset Management, this includes project development, planning, underwriting, market positioning, operations, financing and ongoing asset management. The breadth of our experience enables us to develop comprehensive and cross-functional solutions focused on project-specific needs for our clients and stakeholders around the globe.",
-                                              style: GoogleFonts.abel(
-                                                  fontSize: 15,
-                                                  color: Colors.white),
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                      Container(
+                                        width: 300,
+                                        height: 200,
+                                        child: Text(
+                                          "We continually invest in research and product development, we are leaders in process management, professional practices and the innovation of technical practices that have become standard in the business of global real estate and infrastructure asset management. We employ the latest technological advances and strategic solutions in market intelligence, strategic planning, and overall project execution.",
+                                          style: GoogleFonts.abel(
+                                              fontSize: 15,
+                                              color: Colors.white),
+                                        ),
+                                      )
                                     ],
                                   ),
-                                  Row(
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            AnimatedOpacity(
+                              opacity: pixels >= 6800 ? 1.0 : newOpacity5,
+                              duration: Duration(seconds: 1),
+                              onEnd: () {
+                                setState(() {
+                                  newOpacity5 = 1;
+                                });
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "4. TRUSTED PARTNERSHIPS",
-                                            style: GoogleFonts.abel(
-                                                fontSize: 30,
-                                                color: Colors.white),
-                                          ),
-                                          Container(
-                                            width: 300,
-                                            height: 200,
-                                            child: Text(
-                                              "360 AMI works with highly qualified professional firms and leading global brands in building 'highest and best use' solutions tailored to project requirements. Our relationships are based upon trust, market proven expertise and successful track records. Our 360's Professional Teams provide targeted solutions providing efficiency and enhanced performance.",
-                                              style: GoogleFonts.abel(
-                                                  fontSize: 15,
-                                                  color: Colors.white),
-                                            ),
-                                          )
-                                        ],
+                                      Text(
+                                        "ORGANIZATIONAL STRENGTH",
+                                        style: GoogleFonts.abel(
+                                            fontSize: 30, color: Colors.white),
                                       ),
-                                      const SizedBox(width: 130),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            "5. DISCIPLINED PROCESS",
-                                            style: GoogleFonts.abel(
-                                                fontSize: 30,
-                                                color: Colors.white),
-                                          ),
-                                          Container(
-                                            width: 300,
-                                            height: 200,
-                                            child: Text(
-                                              "360 AMI is a knowledge-based enterprise specializing in the strategic positioning of infrastructure and real estate projects in meeting with peak market demand. We are a metrics driven organization with superior skills in the underwriting, planning and optimizing of complex projects.",
-                                              style: GoogleFonts.abel(
-                                                  fontSize: 15,
-                                                  color: Colors.white),
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                      Container(
+                                        width: 300,
+                                        height: 200,
+                                        child: Text(
+                                          "Our integrated platform brings broad based expertise across the entire spectrum of Asset Management, this includes project development, planning, underwriting, market positioning, operations, financing and ongoing asset management. The breadth of our experience enables us to develop comprehensive and cross-functional solutions focused on project-specific needs for our clients and stakeholders around the globe.",
+                                          style: GoogleFonts.abel(
+                                              fontSize: 15,
+                                              color: Colors.white),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ],
                               ),
-                            )
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AnimatedOpacity(
+                                  opacity: pixels >= 7100 ? 1.0 : newOpacity6,
+                                  duration: Duration(seconds: 1),
+                                  onEnd: () {
+                                    setState(() {
+                                      newOpacity6 = 1.0;
+                                    });
+                                  },
+                                  child: AnimatedPadding(
+                                    padding: EdgeInsets.only(
+                                        right: pixels >= 7100 ? 0.0 : newPos3),
+                                    duration: Duration(seconds: 1),
+                                    onEnd: () {
+                                      setState(() {
+                                        newPos3 = 0.0;
+                                      });
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "TRUSTED PARTNERSHIPS",
+                                          style: GoogleFonts.abel(
+                                              fontSize: 30,
+                                              color: Colors.white),
+                                        ),
+                                        Container(
+                                          width: 300,
+                                          height: 200,
+                                          child: Text(
+                                            "360 AMI works with highly qualified professional firms and leading global brands in building 'highest and best use' solutions tailored to project requirements. Our relationships are based upon trust, market proven expertise and successful track records. Our 360's Professional Teams provide targeted solutions providing efficiency and enhanced performance.",
+                                            style: GoogleFonts.abel(
+                                                fontSize: 15,
+                                                color: Colors.white),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 130),
+                                AnimatedOpacity(
+                                  opacity: pixels >= 7100 ? 1.0 : newOpacity6,
+                                  duration: Duration(seconds: 1),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        "DISCIPLINED PROCESS",
+                                        style: GoogleFonts.abel(
+                                            fontSize: 30, color: Colors.white),
+                                      ),
+                                      Container(
+                                        width: 300,
+                                        height: 200,
+                                        child: Text(
+                                          "360 AMI is a knowledge-based enterprise specializing in the strategic positioning of infrastructure and real estate projects in meeting with peak market demand. We are a metrics driven organization with superior skills in the underwriting, planning and optimizing of complex projects.",
+                                          style: GoogleFonts.abel(
+                                              fontSize: 15,
+                                              color: Colors.white),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       )
@@ -1678,29 +1773,36 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                           AssetImage("assets/images/undergroundmontreal2.jpg"),
                       fit: BoxFit.cover),
                 ),
-                child: Container(
-                  color: Colors.black.withOpacity(0.5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "360Pacifica",
-                        style: GoogleFonts.abel(
-                          fontSize: 60,
-                          color: Colors.white,
+                child: AnimatedOpacity(
+                  opacity: pixels >= 9968 ? 1.0 : newOpacity7,
+                  duration: const Duration(seconds: 1),
+                  onEnd: () {
+                    newOpacity7 = 1.0;
+                  },
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "360Pacifica",
+                          style: GoogleFonts.abel(
+                            fontSize: 60,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "BUILDING FUTURES",
-                        style:
-                            GoogleFonts.abel(fontSize: 20, color: Colors.white),
-                      ),
-                      Text(
-                        "360 PACIFICA ENVIRONMENTAL STEWARDSHIP",
-                        style:
-                            GoogleFonts.abel(fontSize: 20, color: Colors.white),
-                      ),
-                    ],
+                        Text(
+                          "BUILDING FUTURES",
+                          style: GoogleFonts.abel(
+                              fontSize: 20, color: Colors.white),
+                        ),
+                        Text(
+                          "360 PACIFICA ENVIRONMENTAL STEWARDSHIP",
+                          style: GoogleFonts.abel(
+                              fontSize: 20, color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

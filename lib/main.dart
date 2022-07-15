@@ -4,6 +4,7 @@ import 'package:pacifica/model/User.dart';
 
 import 'HomepageElements/homepage.dart';
 import 'ContactElements/contact.dart';
+import 'InfrastructureElements/infrastructure.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -27,7 +28,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Homepage(),
+      home: const Infrastructure(),
     );
   }
 }
