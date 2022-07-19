@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../HomepageElements/homepage.dart';
 import '../ContactElements/contact.dart';
 import '../InfrastructureElements/infrastructure.dart';
+import '../TeamElements/teampage.dart';
 
 class DesktopNav extends StatefulWidget {
   const DesktopNav({Key? key}) : super(key: key);
@@ -98,7 +99,7 @@ class _DesktopNavState extends State<DesktopNav> {
                     setState(() {
                       if (DesktopNav.activePage != "Team") {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const Homepage()));
+                            builder: (context) => const Teampage()));
                         DesktopNav.activePage = 'Team';
                       }
                     });
