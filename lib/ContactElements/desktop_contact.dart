@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -8,6 +9,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../NavbarElements/navbar.dart';
 import '../FooterElements/footer.dart';
 import '../model/User.dart';
+import '../model/Profile.dart';
 
 class DesktopContact extends StatefulWidget {
   const DesktopContact({Key? key}) : super(key: key);
@@ -277,12 +279,14 @@ class _DesktopContactState extends State<DesktopContact> {
     );
   }
 
+  // Add user in the hive box
   void addUser(User user) {
     final usersBox = Hive.box("users");
     usersBox.add(user);
     print(usersBox.length);
   }
 
+  // Show users stored in the hive box
   Widget showUsers() {
     return WatchBoxBuilder(
       box: Hive.box("users"),
@@ -393,6 +397,32 @@ class _DesktopContactState extends State<DesktopContact> {
     );
   }
 
+  // Insert user in the firebase database
+  void insertProfile(Profile profile) async {
+    final docProfile = FirebaseFirestore.instance.collection('profiles').doc();
+    profile.id = docProfile.id;
+    // FirebaseFirestore.instance.collection('users').add(profile.toMap());
+    docProfile.set(profile.toMap());
+    print("Profile is added in the database");
+  }
+
+  // Read data from firebase
+  Stream<List<Profile>> readData() => FirebaseFirestore.instance
+      .collection('profiles')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Profile.fromMap(doc.data())).toList());
+
+  Widget showUsersFromFirebase() {
+    return StreamBuilder<List<Profile>>(
+      stream: readData(),
+      builder: (context, snapshot) {
+        print(snapshot.data);
+        return ListView();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -471,14 +501,28 @@ class _DesktopContactState extends State<DesktopContact> {
                                               if (_formKey.currentState!
                                                   .validate()) {
                                                 _formKey.currentState?.save();
-                                                final newUser = User(
-                                                    _firstName,
-                                                    _lastName,
-                                                    _email,
-                                                    _phoneNumber,
-                                                    _company,
-                                                    _projectDescription);
-                                                addUser(newUser);
+
+                                                // for inserting the user inside the hive box
+                                                // final newUser = User(
+                                                //     _firstName,
+                                                //     _lastName,
+                                                //     _email,
+                                                //     _phoneNumber,
+                                                //     _company,
+                                                //     _projectDescription);
+                                                // addUser(newUser);
+
+                                                // for inserting the profile in the firebase
+                                                final newProfile = Profile(
+                                                  _firstName,
+                                                  _lastName,
+                                                  _email,
+                                                  _phoneNumber,
+                                                  _company,
+                                                  _projectDescription,
+                                                );
+
+                                                insertProfile(newProfile);
                                                 _formKey.currentState?.reset();
                                               } else {
                                                 return;
@@ -500,6 +544,7 @@ class _DesktopContactState extends State<DesktopContact> {
                                             onPressed: () {
                                               setState(() {
                                                 isShowUsers = true;
+                                                readData();
                                               });
                                             },
                                             hoverColor: Colors.grey,
@@ -521,7 +566,9 @@ class _DesktopContactState extends State<DesktopContact> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height: 500,
-                          child: isShowUsers ? showUsers() : Container(),
+                          child: isShowUsers
+                              ? showUsersFromFirebase()
+                              : Container(),
                         ),
                         const Footer(),
                       ],
