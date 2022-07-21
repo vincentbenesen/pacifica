@@ -1,0 +1,378 @@
+***Flutter Notes*** 
+How to create a flutter project:
+	-> type this command "flutter create first_app" (words must not contain dash or white space)
+
+The Basics (Widgets and How Apps are built)
+* Folder and what they do 
+	- .idea folder -> for configuration fir android studio 
+	- android folder -> use to merge it to the android project. Use to build android project.
+	- build folder -> don't change anything from this folder 
+	- ios folder -> same thing as android folder. It holds things for Xcode 
+	- lib folder -> the folder where we code. Where all dart files are located.
+	- test -> where we use unit testing
+	- pubspec.yaml -> where we change the dependencies for the project (use for fonts and etc..). Manage Third party dependencies.
+
+* Coding part (DART)
+	- Uses camelcase like JAVA
+	- datatypes are also the same (int, double, floats, String)
+	- To comment code use //
+	- class constructor
+		1. First way :
+		  Person(String inputName, int inputAge) {
+   			 this.name = inputName;
+    		 this.age = inputAge;
+  		  }
+		2. Second way:
+		Person({this.name, this.age});
+		// To create a Person object 
+		 Person p1 = new Person(name:"Vincent", age:12);
+
+* Flutter (UI) 
+	- the elements we see on the screen are called widgets
+	- To create a widget we need a class:
+		class MyApp {
+
+		}
+	- runApp() always run the build method of each class 	
+	- All widgets must extend to StatelessWidget or StateFulWidget (they must return the widgets to show the elements on the app)
+	- StatelessWidget VS StatefulWidget
+		1. StatelessWidget: Data can change externally but not inside the app 
+		2. StatefulWidget: Data can be change inside tha application.  
+	- Different types of Widgets:
+		1. Visible
+			- Buttons
+			- Text
+		2. Invisible
+			- Row
+			- Column
+		3. Container 
+	- If a function only has one line of code then we can just write it like this:
+		void main() => runApp();
+	- Scaffold() allows to have basic design on the app (color, backgroundColor)
+	- in onPressed when we add a method on it  only add the name of the method without adding the (). For example, onPressed:answerQuestion. 
+	- Anonymous function. () => {};.
+	- setState() call the build so updates the widge. To change something using a method we need put a setState() method inside a method. This is method is for StateFulWidget: 
+		  void answerQuestion() {
+		    setState(() {
+		      print("Answer chosen");
+		      questionIndex++;
+		    });
+		  }
+	- To make a widget private and can be used only be accessible on the file its created, we put _ infront of the classed and methods. For example, _MyAppState and _answerQuestion.	
+	- To add an action from a class to another clas we first Initialize it to a new class: 	final VoidCallback theFunction				
+	- Expanded Widget are containers that are empty. It is used to add spaces between elements
+	- SizedBox are also used to add spaces between elements
+	- How to go to the other screens: Get.to(() => HomePage()); or  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Homepage()));
+
+* Classes and their uses
+- Container -> use as a container where all the widgets can be put together
+- Column -> to align the widgets horizontaly in the container
+- Row -> to align the widget vertically in the container
+- SizeBox -> use to align spaces between the widgets 
+- CrossAxisAlignment -> use to alin the widgets inside a container
+- Boxdecoration -> to put a decoration for the container
+- Stack -> to make items to overlap to each other
+- DecorationImage -> how to add an image.
+- AssetImage -> how we add an image from an Asset. We put this inside the DecorationImage widget
+- BoxFit -> how do want to display the image (fit the screen or as a cover)
+- InkWell -> use to go to other pages. It can also make the icons clickable.
+- GestureDetector -> make something clickable 
+- LayoutBuilder -> makes the navbar responsive	
+
+------------------------------------------------------------------------------
+Different types of how to make parameters 
+1. Positional optional parameters
+	Wrap the optional parameter with [ ] square brackets.
+
+	class User {
+
+	  String name;
+	  int age;
+	  String home;
+
+	  User(this.name, this.age, [this.home = 'Earth']);
+	}
+
+	User user1 = User('Bob', 34);
+	User user2 = User('Bob', 34, 'Mars');
+
+	Optional parameters need to be nullable if you don't provide a default value:	
+
+	class User {
+
+	  String name;
+	  int age;
+	  String? home; //    <-- Nullable
+
+	  User(this.name, this.age, [this.home]);
+	}
+
+2. Named optional parameters
+	Wrap the optional parameter with { } curly braces.
+
+	class User {
+
+	  String name;
+	  int age;
+	  String home;
+
+	  User(this.name, this.age, {this.home = 'Earth'});
+	}
+
+	User user1 = User('Bob', 34);
+	User user2 = User('Bob', 34, home: 'Mars');
+	The default for home is "Earth", but like before, if you don't provide a default then you need to change String home to String? home.
+
+3. Private fields
+	If you need private fields then you can use [] square brackets:
+
+	class User {
+	  int? _id;
+	  User([this._id]);
+	}
+
+	User user = User(3);
+	or do as the accepted answer says and use an initializer list:
+
+	class User {
+	  int? _id;
+	  User({int? id}) 
+	    : _id = id;
+	}
+
+	User user = User(id: 3);
+4. Named required parameters
+	Named parameters are optional by default, but if you want to make them required, then you can use the required keyword:
+
+	class User {
+	  final String name;
+	  final int age;
+	  final String home;
+
+	  User({
+	    required this.name,
+	    required this.age,
+	    this.home = 'Earth',
+	  });
+	}
+
+	User user1 = User(name: 'Bob', age: 34);
+	User user2 = User(name: 'Bob', age: 34, home: 'Mars');
+-----------------------------------------------------------------------------
+How to make TextFormField
+1. First create a Form Widget
+2. Make sure to provide a key in that widget. This key will be used in order to validate the fields inside the form 
+	final GlobalKey<FormState> _formkey = GlobalKey<FormState>(); 
+3. Create the TextFormField Widget
+	 Widget _buildFirstName() {
+	    return TextFormField(
+	      key: firstNameFieldKey,
+	      focusNode: firstNameNode,
+	      decoration: const InputDecoration(
+	        labelText: "FIRST NAME",
+	        labelStyle: TextStyle(fontSize: 25, color: Colors.white),
+	        hintText: "Vincent",
+	        hintStyle: TextStyle(color: Colors.grey),
+	        errorStyle: TextStyle(fontSize: 20),
+	        enabledBorder: UnderlineInputBorder(
+	          borderSide: BorderSide(color: Colors.white),
+	        ),
+	        focusedBorder: UnderlineInputBorder(
+	          borderSide: BorderSide(color: Colors.grey),
+	        ),
+	        border: UnderlineInputBorder(
+	          borderSide: BorderSide(color: Colors.grey),
+	        ),
+	      ),
+	      style: const TextStyle(fontSize: 25, color: Colors.white),
+	      validator: (String? value) {
+	        if (value.toString().isEmpty) {
+	          return "This field is required";
+	        }
+	        return null;
+	      },
+	      onSaved: (value) {
+	        _firstName = value.toString();
+	      },
+	    );
+	  }
+4. Create a submit button 
+	RaisedButton(
+	    onPressed: () {
+	      // Checks if all the required fields are filled.
+	      if (_formKey.currentState!
+	          .validate()) {
+	        _formKey.currentState?.save();
+
+	        // for inserting the user inside the hive box
+	        // final newUser = User(
+	        //     _firstName,
+	        //     _lastName,
+	        //     _email,
+	        //     _phoneNumber,
+	        //     _company,
+	        //     _projectDescription);
+	        // addUser(newUser);
+
+	        // for inserting the profile in the firebase
+	        final newProfile = Profile(
+	          _firstName,
+	          _lastName,
+	          _email,
+	          _phoneNumber,
+	          _company,
+	          _projectDescription,
+	        );
+
+	        insertProfile(newProfile);
+	        _formKey.currentState?.reset();
+	      } else {
+	        return;
+	      }
+	    },
+	    hoverColor: Colors.grey,
+	    child: Text(
+	      "SUBMIT",
+	      style: GoogleFonts.abel(
+	          fontWeight: FontWeight.bold),
+	    ),
+	)
+------------------------------------------------------------------------------
+How to implement HIVE:
+1. import the dependencies in the pubspec.yaml file
+dependencies:
+  flutter:
+    sdk: flutter
+  hive: ^2.0.5
+  hive_flutter: ^1.1.0
+
+AND
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  hive_generator: ^1.1.2
+  build_runner: ^2.1.7 
+
+2. Initialize HIVE in the main.dart
+void main() async {
+  await Hive.initFlutter();
+  // This line is inserted after the 4th step 
+  Hive.registerAdapter(UserAdapter());
+  runApp(MyApp());
+}
+
+3. Make sure to have an open box in the current file or other file 
+final box = await Hive.openBox('testBox'); 
+
+or
+
+return FutureBuilder(
+      future: Hive.openBox('users'),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return (Text(snapshot.error.toString()));
+          } else {
+          	// Elements of the page
+            return Scaffold();
+        }
+        // We need to this to avoid the error page. 
+        return Scaffold();
+
+4. Generate the HiveType for the class that we want to insert in the database
+We need to add @HiveType(typeId: 0) on top of the class name and @HiveField(index) on tap of each class data members and also the part 'name of the file (User.g.dart)'
+
+then go on terminal then type: flutter packages pub run build_runner build
+
+5. Now we can easily add something in the hive box 
+final usersBox = Hive.box("nameOfTheBox");
+usersBox.add(user);
+
+------------------------------------------------------------------------------
+How to implement FIREBASE on web apps:
+1. Import all the dependencies in the pubscpec.yaml file
+	firebase_core: ^1.19.2
+	cloud_firestore: ^3.3.0
+	firebase_auth: ^3.4.2
+2. Create a project on Firebase
+3. Copy paste the plugins from Firebase to web/index.html
+	<!-- Firebase plugins for the web application   -->
+	<script type="module">
+	  // Import the functions you need from the SDKs you need
+	  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
+	  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
+	  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js";
+
+	  // TODO: Add SDKs for Firebase products that you want to use
+	  // https://firebase.google.com/docs/web/setup#available-libraries
+
+	  // Your web app's Firebase configuration
+	  const firebaseConfig = {
+	    apiKey: "AIzaSyAipwchueYRMQhdswHq-HvbnQOXWIf5DN8",
+	    authDomain: "fir-flutter-479eb.firebaseapp.com",
+	    projectId: "fir-flutter-479eb",
+	    storageBucket: "fir-flutter-479eb.appspot.com",
+	    messagingSenderId: "985079857939",
+	    appId: "1:985079857939:web:e3106b184d8d5affc450e6"
+	  };
+4. Import firebase library and initialize firebase in the main.dart
+	import 'package:firebase_core/firebase_core.dart';
+
+	void main() async {
+  		WidgetsFlutterBinding.ensureInitialized();
+		await Firebase.initializeApp(
+      		options: const FirebaseOptions(
+          		apiKey: "AIzaSyAipwchueYRMQhdswHq-HvbnQOXWIf5DN8",
+          		authDomain: "fir-flutter-479eb.firebaseapp.com",
+          		projectId: "fir-flutter-479eb",
+          		storageBucket: "fir-flutter-479eb.appspot.com",
+          		messagingSenderId: "985079857939",
+          		appId: "1:985079857939:web:e3106b184d8d5affc450e6"));
+        runApp(MyApp());
+	}
+5. Create a class. This class will be the one inserted in the Firebase
+	class Profile {
+		String id;
+		final String firstName;
+		final String lastName;
+		final String email;
+		final String company;
+		final String phoneNumber;
+		final String projectDetails 
+
+		Profile(this.firstName, this.lastName, this.email, this.company, this.phoneNumber, this.projectDetails, [this.id = '']);
+
+		// This method is used to insert a Profile instance in Firebase
+		// Transform the class into a json 
+		Map<String, dynamic> toJson() {
+			return {
+			'firstName' : firstName,
+			'lastName' : lastName,
+			'email' : email,
+			'company': company,
+			'phoneNumber' : phoneNumber,
+			'projectDetails': projectDetails 
+			};
+		}
+
+		// This method is used when reading all the data from Firebase
+		// Convert a map instance into Profile Instance
+		static Profile fromMap(Map<String, dynamic> map) {
+			return Profile(map['firstName'], map['lastName'], map['email'], map['company'], map['phoneNumber'], map['projectDetails'])
+		}
+	}
+6. How to insert in Firebase
+	void insert(Profile profile) {
+		final docProfile = FirebaseFirestore.instance.collection('profiles').doc();
+		profile.id = docProfile.id;
+
+		docProfile.set(profile.toJson());
+		print('Added to firebase');
+	}
+7. How to read from Firebase
+	Stream<List<Profile>> readProfiles() => FirebaseFirestore.instance.collections('profiles').snapshots.map((snapshot)=>snapshot.docs.map((doc)=>Profile.fromMap(doc.data())).toList());
+8. How to delete from Firebase
+	void delete(Profile profile) {
+		FirebaseFirestore.instance.collection('profiles').doc(profile.id).delete();
+	}

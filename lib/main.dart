@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Teampage(),
+      home: const Contact(),
     );
   }
 }

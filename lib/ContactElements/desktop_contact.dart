@@ -51,26 +51,35 @@ class _DesktopContactState extends State<DesktopContact> {
     companyNode = FocusNode();
     phoneNode = FocusNode();
 
+    // Validates firstname field when the user stop focusing on the field
     firstNameNode.addListener(() {
       if (!firstNameNode.hasFocus) {
         firstNameFieldKey.currentState?.validate();
       }
     });
+
+    // Validates lastname field when the user stop focusing on the field
     lastNameNode.addListener(() {
       if (!lastNameNode.hasFocus) {
         lastNameFieldKey.currentState?.validate();
       }
     });
+
+    // Validates email field when the user stop focusing on the field
     emailNode.addListener(() {
       if (!emailNode.hasFocus) {
         emailFieldKey.currentState?.validate();
       }
     });
+
+    // Validates company field when the user stop focusing on the field
     companyNode.addListener(() {
       if (!companyNode.hasFocus) {
         companyFieldKey.currentState?.validate();
       }
     });
+
+    // Validates phonenumber field when the user stop focusing on the field
     phoneNode.addListener(() {
       if (!phoneNode.hasFocus) {
         phoneFieldKey.currentState?.validate();
@@ -78,6 +87,7 @@ class _DesktopContactState extends State<DesktopContact> {
     });
   }
 
+  // Create the firstname text form field
   Widget _buildFirstName() {
     return TextFormField(
       key: firstNameFieldKey,
@@ -111,6 +121,7 @@ class _DesktopContactState extends State<DesktopContact> {
     );
   }
 
+  // Create the lastname text form field
   Widget _buildLastName() {
     return TextFormField(
       key: lastNameFieldKey,
@@ -144,6 +155,7 @@ class _DesktopContactState extends State<DesktopContact> {
     );
   }
 
+  // Create the email text form field
   Widget _buildEmail() {
     bool isValidEmail = true;
     return TextFormField(
@@ -184,6 +196,7 @@ class _DesktopContactState extends State<DesktopContact> {
     );
   }
 
+  // Create the company text form field
   Widget _buildCompany() {
     return TextFormField(
       key: companyFieldKey,
@@ -217,6 +230,7 @@ class _DesktopContactState extends State<DesktopContact> {
     );
   }
 
+  // Create the phonenumber text form field
   Widget _buildPhoneNumber() {
     return TextFormField(
       key: phoneFieldKey,
@@ -255,6 +269,7 @@ class _DesktopContactState extends State<DesktopContact> {
     );
   }
 
+  // Create the project description text form field
   Widget _buildProjectDescription() {
     return TextFormField(
       decoration: const InputDecoration(
@@ -286,7 +301,7 @@ class _DesktopContactState extends State<DesktopContact> {
     print(usersBox.length);
   }
 
-  // Show users stored in the hive box
+  // Show users stored in the hive box in a table format
   Widget showUsers() {
     return WatchBoxBuilder(
       box: Hive.box("users"),
@@ -413,13 +428,95 @@ class _DesktopContactState extends State<DesktopContact> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Profile.fromMap(doc.data())).toList());
 
+  // Delete a profile from the firebase
+  void deleteProfile(Profile profile) {
+    FirebaseFirestore.instance.collection('profiles').doc(profile.id).delete();
+  }
+
+  // Display the user retrieved from the firebase
   Widget showUsersFromFirebase() {
     return StreamBuilder<List<Profile>>(
       stream: readData(),
       builder: (context, snapshot) {
-        print(snapshot.data);
-        return ListView();
+        if (snapshot.hasData) {
+          final profile = snapshot.data;
+          return ListView(
+            children: profile!.map(userProfile).toList(),
+          );
+        } else {
+          return const Text("There's no data");
+        }
       },
+    );
+  }
+
+  // Creates a table that display the information about a user
+  DataTable userProfile(Profile profile) {
+    return DataTable(
+      columns: [
+        DataColumn(
+          label: Container(
+            width: 200,
+            child: Text('Name',
+                style: GoogleFonts.abel(
+                    fontWeight: FontWeight.bold, fontSize: 30)),
+          ),
+        ),
+        DataColumn(
+          label: Container(
+            width: 200,
+            child: Text('Email',
+                style: GoogleFonts.abel(
+                    fontWeight: FontWeight.bold, fontSize: 30)),
+          ),
+        ),
+        DataColumn(
+          label: Container(
+            width: 200,
+            child: Text('Phonenumber',
+                style: GoogleFonts.abel(
+                    fontWeight: FontWeight.bold, fontSize: 30)),
+          ),
+        ),
+        DataColumn(
+          label: Container(
+            width: 200,
+            child: Text('Company',
+                style: GoogleFonts.abel(
+                    fontWeight: FontWeight.bold, fontSize: 30)),
+          ),
+        ),
+        DataColumn(
+          label: Container(
+            width: 200,
+            child: Text('',
+                style: GoogleFonts.abel(
+                    fontWeight: FontWeight.bold, fontSize: 30)),
+          ),
+        ),
+      ],
+      rows: [
+        DataRow(cells: [
+          DataCell(Text("${profile.firstName} ${profile.lastName}",
+              style:
+                  GoogleFonts.abel(fontWeight: FontWeight.bold, fontSize: 20))),
+          DataCell(Text(profile.email,
+              style:
+                  GoogleFonts.abel(fontWeight: FontWeight.bold, fontSize: 20))),
+          DataCell(Text(profile.phoneNumber,
+              style:
+                  GoogleFonts.abel(fontWeight: FontWeight.bold, fontSize: 20))),
+          DataCell(Text(profile.company,
+              style:
+                  GoogleFonts.abel(fontWeight: FontWeight.bold, fontSize: 20))),
+          DataCell(RaisedButton(
+            onPressed: () {
+              deleteProfile(profile);
+            },
+            child: Icon(Icons.delete_outline_outlined),
+          )),
+        ])
+      ],
     );
   }
 
